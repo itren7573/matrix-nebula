@@ -1,0 +1,188 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+// 添加配置声明
+configurations {
+    mysql
+}
+
+group = 'com.matrix'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'io.asyncer:r2dbc-mysql:1.0.5'
+
+    // 阻塞式JDBC配置
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'mysql:mysql-connector-java:8.0.28'
+
+    // 导入令牌管理依赖
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // 导入单元测试依赖
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+
+    // 添加 R2DBC 事务管理依赖
+    implementation 'org.springframework:spring-r2dbc:6.1.4'
+
+    // AspectJ 支持
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // AspectJ 依赖
+    implementation 'org.aspectj:aspectjweaver:1.9.19'
+    implementation 'org.aspectj:aspectjrt:1.9.19'
+
+    // 添加 NanoId 依赖
+    implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
+
+    // 添加MariaDB驱动依赖
+    mysql 'org.mariadb.jdbc:mariadb-java-client:3.3.2'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 创建一个Java类来执行数据库初始化
+task createInitializerClass {
+    doLast {
+        def sourceFile = file("${buildDir}/tmp/DatabaseInitializer.java")
+        sourceFile.parentFile.mkdirs()
+        sourceFile.setText("""
+            import java.sql.*;
+            import java.io.*;
+            import java.nio.charset.StandardCharsets;
+            import java.nio.file.*;
+            import java.util.List;  // 添加List导入
+
+            public class DatabaseInitializer {
+                public static void main(String[] args) {
+                    try {
+                        Class.forName("org.mariadb.jdbc.Driver");
+                        
+                        String url = "jdbc:mariadb://localhost:2025/?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
+                        Connection conn = DriverManager.getConnection(url, "root", "Matrix.Develop.2025");
+                        
+                        // 设置连接的字符集
+                        Statement init = conn.createStatement();
+                        init.execute("SET NAMES utf8mb4");
+                        init.close();
+                        
+                        conn.setAutoCommit(false);
+                        
+                        try {
+                            Statement stmt = conn.createStatement();
+                            
+                            String[] files = {"matrix.sql"};
+                            for (String file : files) {
+                                File sqlFile = new File("ddl/" + file);
+                                if (sqlFile.exists()) {
+                                    System.out.println("正在执行SQL文件: " + file);
+                                    // 使用Files.readAllLines确保正确读取UTF-8编码
+                                    List<String> lines = Files.readAllLines(sqlFile.toPath(), StandardCharsets.UTF_8);
+                                    StringBuilder sqlContent = new StringBuilder();
+                                    for (String line : lines) {
+                                        sqlContent.append(line).append("\\n");
+                                    }
+                                    
+                                    // 分割并执行SQL语句
+                                    String[] statements = sqlContent.toString().split(";");
+                                    for (String sql : statements) {
+                                        sql = sql.trim();
+                                        if (!sql.isEmpty()) {
+                                            try {
+                                                stmt.execute(sql);
+                                            } catch (SQLException e) {
+                                                System.err.println("执行SQL失败: " + sql);
+                                                throw e;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            conn.commit();
+                            System.out.println("数据库初始化完成");
+                            
+                        } catch (Exception e) {
+                            conn.rollback();
+                            throw e;
+                        } finally {
+                            conn.close();
+                        }
+                        
+                    } catch (Exception e) {
+                        System.err.println("初始化失败: " + e.getMessage());
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+                }
+            }
+        """, 'UTF-8')
+    }
+}
+
+// 编译初始化器类
+task compileInitializer(type: JavaCompile, dependsOn: createInitializerClass) {
+    source = file("${buildDir}/tmp")
+    destinationDirectory = file("${buildDir}/classes/initializer")
+    classpath = configurations.mysql
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+    options.encoding = 'UTF-8'
+    
+    // 添加java.util.List的导入
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+// 数据库初始化任务
+task initDB(type: JavaExec, dependsOn: compileInitializer) {
+    group = 'matrix'
+    description = '初始化数据库架构和基础数据'
+    
+    classpath = files("${buildDir}/classes/initializer") + configurations.mysql
+    mainClass = 'DatabaseInitializer'
+    
+    // 添加JVM参数
+    jvmArgs = ['-Dfile.encoding=UTF-8']
+}
+
+task releasePatch(type: JavaExec, dependsOn: compileInitializer) {
+    group = 'matrix'
+    description = '发布版本补丁'
+}
+
+task releaseMinor(type: JavaExec, dependsOn: compileInitializer) {
+    group = 'matrix'
+    description = '发布次版本'
+
+}
+
+task releaseMajor(type: JavaExec, dependsOn: compileInitializer) {
+    group = 'matrix'
+    description = '发布主版本'
+}
+
+task makeInstallPkg(type: JavaExec, dependsOn: compileInitializer) {
+    group = 'matrix'
+    description = '制作安装包'
+}
+

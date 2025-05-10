@@ -1,0 +1,37 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost:2025/matrix
+    username: root
+    password: Matrix.Develop.2025
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    transaction-manager:
+      enabled: true
+
+  # JPA 配置
+  datasource:
+    url: jdbc:mysql://localhost:2025/matrix?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Matrix.Develop.2025
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Shanghai
+
+  main:
+    allow-circular-references: true
+
+  messages:
+    basename: i18n/messages
+    fallback-to-system-locale: false
+    default-locale: zh_CN
+    encoding: UTF-8
+    
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.data.r2dbc: DEBUG
