@@ -1,50 +1,24 @@
-# loong-frame
+# Matxrix-nebula (矩阵星云)
 
 #### 介绍
-loong-frame(神农架构，也称龙架构)是一个面向Java21技术栈的集成式单体web应用架构，基于Spring boot3框架并融合了Spring MVC与Spring WebFlux，全面兼顾开发效率和运行效率。当前已实现了登录认证，
-用户管理，角色管理，菜单管理四大基础模块并对国际化，虚拟线程，后台常驻服务，后台输入校验，操作日志审计切面进行了封装，可使您直接面向业务逻辑的开发与实现，省却基础建设的工作，特别适合中小型产品
-或项目的开发工作。loong-frame使用unlicense开源协议，除了免责申明外没有任何限制，可用于商业目的，也可二次开源。
-当前开源的loong-frame版本代号为rise，意为蛟龙出海，乃抛砖引玉之作。在此之后还有两个闭源版本：sphere - 龙腾四海； peak - 龙驾九天。sphere是一个使用gradle进行构建的可组装式单体应用，
-特别适合于面向多产品管理成本可控的企业级中大型产品或项目；peak则是在上两个版本基础上使用spring cloud实现的微服务架构版本，适用于互联网云端应用的超大型产品或项目。
-随时欢迎你的垂询，加盟，合作。联系方式：13911899175（微信号），微信联系时请写明代号：神农
+矩阵星云是一个系列化的架构软件, 包括单体架构, 组装式单体架构, 以及组装式微服务架构三个层级. 它们采用逐步迭代的方式按序实现, 为了让迭代过程科学规范, 借用星系的形成过程对各阶段进行命名, 并用星云作为名称的一部分隐喻在如今开/闭源软件好比宇宙苍穹的满天繁星, 每一颗星都熠熠生辉. 矩阵星云也将成为这个大家庭的一员。同时组装式架构是本系列架构软件的核心所在, 在计算机软件领域,通过拖拖拽拽就能组装出所需的软件一直是个研究的课题. 随着软件技术的发展,当前面向模块的构建与组装已是轻易就能完成的任务,这为解决这一课题提供了强大的支撑.但软件模块之间的依赖关系又是复杂的, 这就好比数学概念中的矩阵一样, 定义一个矩阵是简单的, 但对多个矩阵进行运算得到不同的结果却又是复杂的!
+
+<b>总而言之, 矩阵星云由此而来。</b>
+
+#### 矩阵星云三部曲
+罗马不是一日建成的,矩阵星云也要经历从无到有的过程,这个过程从易到难将分为三个阶段. 借用星系的形成过程对这三阶段建设分别命名为:创世之柱,恒星闪耀,星系永恒. 当前看到就是第一阶段的创世之柱. 更多详细信息请访问: https://www.matx.top
 
 #### 软件架构
-loong-frame的rise版本是一个集成式单体web应用架构，在Spring boot3基础上融合了Spring MVC与Spring WebFlux框架。建议当待开发的模块运行时并发量低时可使用Spring MVC技术栈实现，开发效率高；当待开发
-的模块运行时并发量高时可使用Spring WebFlux实现，运行性能优异但技术门槛高，学习路线陡峭影响开发效率。也可全部使用单一框架，任君心意。
-采用前后端分离方案，前端基于vue技术栈的开源框架Vben进行的二次开发，前端工程名称：loong-vben。gitee地址：https://gitee.com/Lee7573/loong-vben
-
 <img src="architecture.png" width="600" height="auto" alt="架构图">
+Matrix-Nebula是一个基于JAVA21的Spring boot架构项目,采用前后端分离架构，前端采用基于 Vue3 框架下实现的Vben开源软件进行二次开发;后端采用Spring Webflux与Spring MVC融合框架。
 
-#### 安装教程
+Spring Webflux 响应式框架对于高并发场景有天然的优势，在并发量大时，相比于Spring MVC有明显性能优势。但对于大多数软件开发人员来说编程不太友好，需要学习响应式编程相关知识。
 
-1.  生成RSA密钥：ssh-keygen -t rsa
-2.  获取 RSA 公钥内容，并配置到 SSH公钥 中： cat ~/.ssh/id_rsa.pub
-3.  配置本地JAVA21环境
-3.  下载代码到本地：git clone git@gitee.com:Lee7573/loong-frame.git
-4.  使用IDEA打开工程： cd ../loong-frame
-5.  在IDEA中设置工程依赖的JAVA版本，以及Gradle的运行时JAVA版本为本地JAVA21环境
-6.  在Mysql命令行执行DDL脚本，初始化数据库
-7.  运行LoongApplication启动类
+为了兼顾编程友好,做到快速开发，同时融合了Spring MVC框架, 对于并发访问量不大的模块，可以采用Spring MVC框架进行开发。
 
-#### 使用说明
+系统应用层全部基于Spring Webflux框架开发实现; 业务应用层可根据实际需要即可以采用Spring Webflux框架, 也可以采用Spring MVC框架开发, 开发前评估功能模块的并发量, 对于并发量特别大的再考虑用响应式框架开发。
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+系统应用层封装了开箱即用的功能集合, 使用此框架开发应用程序时, 只需关注业务逻辑的实现即可。
 
-#### 参与贡献
+Matrix-Nebula的最大特点除了兼容响应式(Spring Webflux)和阻塞式(Spring MVC)框架外进行开发外, 还提供了一套极简低代码模块, 极大提高了开发效率, 有关详情可参见开发手册。
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
