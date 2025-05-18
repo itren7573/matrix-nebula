@@ -11,7 +11,7 @@
 #### 软件架构
 <img src="architecture-nebula.png" width="600" height="auto" alt="架构图">
 
-- Matrix-Nebula是一个基于JAVA21的Spring boot架构项目,采用前后端分离架构，前端采用基于 Vue3 框架下实现的Vben开源软件进行二次开发;后端采用Spring Webflux与Spring MVC融合框架。
+- Matrix-Nebula是一个基于JAVA21的Spring boot架构项目,采用前后端分离架构，前端采用基于 Vue3 框架下实现的Vben开源软件进行二次开发(前端工程地址: https://gitee.com/matxtop/matirx-vben);后端采用Spring Webflux与Spring MVC融合框架。
 
 - Spring Webflux 响应式框架对于高并发场景有天然的优势，在并发量大时，相比于Spring MVC有明显性能优势。但对于大多数软件开发人员来说编程不太友好，需要学习响应式编程相关知识。
 
