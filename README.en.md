@@ -11,7 +11,7 @@ Rome was not built in a day, and Matrix Nebula will also go through a process fr
 #### Software Architecture
 <img src="architecture-nebula.png" width="600" height="auto" alt="Architecture Diagram">
 
-- Matrix-Nebula is a Java 21-based Spring Boot architecture project, adopting a front-end and back-end separation architecture. The front end is developed based on the [https://gitee.com/matxtop/matirx-vben] Vben software under the Vue3 framework; the back end uses a hybrid framework of Spring Webflux and Spring MVC.
+- Matrix-Nebula is a Java 21-based Spring Boot architecture project, adopting a front-end and back-end separation architecture. The front end is developed based on the Vben software under the Vue3 framework(URL: https://gitee.com/matxtop/matirx-vben); the back end uses a hybrid framework of Spring Webflux and Spring MVC.
 
 - The Spring Webflux reactive framework has natural advantages for high-concurrency scenarios. When concurrency is high, it has obvious performance advantages over Spring MVC. However, for most software developers, reactive programming is not very friendly and requires learning related concepts.
 
