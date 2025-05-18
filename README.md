@@ -9,7 +9,7 @@
 罗马不是一日建成的,矩阵星云也要经历从无到有的过程,这个过程从易到难将分为三个阶段. 借用星系的形成过程对这三阶段建设分别命名为:创世之柱,恒星闪耀,星系永恒. 当前项目处于创世之柱阶段, 了解更多详细信息请访问: https://www.matx.top
 
 #### 软件架构
-<img src="architecture.png" width="600" height="auto" alt="架构图">
+<img src="architecture-nebula.png" width="600" height="auto" alt="架构图">
 - Matrix-Nebula是一个基于JAVA21的Spring boot架构项目,采用前后端分离架构，前端采用基于 Vue3 框架下实现的Vben开源软件进行二次开发;后端采用Spring Webflux与Spring MVC融合框架。
 
 - Spring Webflux 响应式框架对于高并发场景有天然的优势，在并发量大时，相比于Spring MVC有明显性能优势。但对于大多数软件开发人员来说编程不太友好，需要学习响应式编程相关知识。
